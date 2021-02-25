@@ -16,7 +16,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'name', 'email', 'password', 'phone_number', 'sex', 'role_id'
     ];
 
     /**
@@ -36,4 +36,16 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function totalbill(){
+        return $this->hasMany('App\Models\BillDetail');
+    }
+    public function role()
+    {
+        return $this->belongsTo('App\Role', 'role_id');
+    }
+    public function hasPermission(Permission $permission)
+    {
+        return optional(optional($this->role)->permissions)->contains($permission);
+    }
 }
